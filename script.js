@@ -3,29 +3,23 @@ document.getElementById('tiktokForm').addEventListener('submit', async function(
   const area = document.getElementById('tiktokURL');
   const links = area.value.trim().split('\n').filter(Boolean);
   const resultado = document.getElementById('resultado');
-  resultado.innerHTML = '';
+  resultado.innerHTML = '<p>Cargando...</p>';
 
-  for (let i = 0; i < links.length; i++) {
-    const link = links[i];
+  for (let link of links) {
     try {
-      // 1. Validar el enlace (ejemplo básico)
-      if (!link.includes("tiktok.com")) {
-        resultado.innerHTML += `<p class="error">Enlace no válido: ${link}</p>`;
-        continue;
-      }
-
-      // 2. Simular una petición a tu backend/API (reemplaza con tu lógica real)
-      const response = await fetch(`/api/tiktok?url=${encodeURIComponent(link)}`);
-      if (!response.ok) throw new Error("Error al procesar el enlace");
-
+      // Limpia parámetros extra del enlace
+      const cleanLink = link.split('?')[0];
+      
+      const response = await fetch(`/api/tiktok?url=${encodeURIComponent(cleanLink)}`);
       const data = await response.json();
-
-      // 3. Crear y mostrar la card
-      resultado.innerHTML += crearCardHTML(data, i);
-      actualizarHistorial(link);
-
+      
+      if (!data.play) throw new Error("No se encontró el video");
+      
+      resultado.innerHTML += crearCardHTML(data, links.indexOf(link));
+      actualizarHistorial(cleanLink);
     } catch (error) {
       resultado.innerHTML += `<p class="error">Error con ${link}: ${error.message}</p>`;
     }
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Evita bloqueos
   }
 });
