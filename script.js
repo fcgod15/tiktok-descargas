@@ -1,37 +1,40 @@
-// server.js
-const express = require('express');
-const axios = require('axios');
-const cheerio = require('cheerio');
+document.getElementById('tiktokForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const url = document.getElementById('tiktokURL').value;
 
-const app = express();
-const PORT = 3000;
+  const response = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
+  const result = await response.json();
 
-app.get('/api/tiktok', async (req, res) => {
-  const { url } = req.query;
-  
-  try {
-    const response = await axios.get(url);
-    const $ = cheerio.load(response.data);
+  if (result && result.data) {
+    const data = result.data;
+    document.getElementById('resultado').innerHTML = `
+      <h2>${data.title || 'Video TikTok'}</h2>
 
-    // Extraer datos del HTML (¡Esto puede cambiar con el tiempo!)
-    const scriptData = JSON.parse($('#__NEXT_DATA__').html() || '{}');
-    const videoData = scriptData.props?.pageProps?.itemInfo?.itemStruct || {};
+      <video controls src="${data.play}" width="300"></video><br>
+      <a href="${data.play}" download>📥 Descargar video sin marca de agua</a><br><br>
 
-    const result = {
-      title: videoData.desc || 'Sin título',
-      play: videoData.video?.downloadAddr || videoData.video?.playAddr,
-      cover: videoData.video?.cover,
-      music: videoData.music?.playUrl,
-      author: videoData.author,
-      play_count: videoData.stats?.playCount
-    };
+      <h3>🖼️ Imágenes disponibles</h3>
+      <p>Portada estática:</p>
+      <img src="${data.cover}" alt="Portada" width="200"><br>
+      <a href="${data.cover}" download>Descargar portada</a><br><br>
 
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al procesar el enlace' });
+      <p>Portada original:</p>
+      <img src="${data.origin_cover}" alt="Original" width="200"><br>
+      <a href="${data.origin_cover}" download>Descargar original</a><br><br>
+
+      <p>Portada dinámica (gif o mp4):</p>
+      <img src="${data.dynamic_cover}" alt="Dinámica" width="200"><br>
+      <a href="${data.dynamic_cover}" download>Descargar portada animada</a><br><br>
+
+      <h3>🎵 Música del video</h3>
+      <audio controls src="${data.music}"></audio><br>
+      <a href="${data.music}" download>Descargar música</a><br><br>
+
+      <p>👤 Usuario: @${data.author.unique_id}</p>
+      <p>📝 Descripción: ${data.title}</p>
+      <p>👁️‍🗨️ Vistas: ${data.play_count}</p>
+    `;
+  } else {
+    document.getElementById('resultado').innerText = 'No se pudo obtener información del video.';
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`Servidor en http://localhost:${PORT}`);
 });
