@@ -1,29 +1,37 @@
+self.addEventListener('install', function(event) {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', function(event) {
+  event.waitUntil(self.clients.claim());
+});
+
 function getYmid() {
-    try {
-        return new URL(location.href).searchParams.get('ymid');
-    } catch (e) {
-        console.warn(e);
-    }
-    return null;
+  try {
+    return new URL(self.location.href).searchParams.get('ymid');
+  } catch (e) {
+    console.warn(e);
+  }
+  return null;
 }
 
 function getVar() {
-    try {
-        return new URL(location.href).searchParams.get('var');
-    } catch (e) {
-        console.warn(e);
-    }
-    return null;
+  try {
+    return new URL(self.location.href).searchParams.get('var');
+  } catch (e) {
+    console.warn(e);
+  }
+  return null;
 }
 
 self.options = {
-    domain: "desekansr.com",
-    resubscribeOnInstall: true,
-    zoneId: 9506379,
-    ymid: getYmid(),
-    var: getVar()
+  domain: "desekansr.com",
+  resubscribeOnInstall: true,
+  zoneId: 9506379,
+  ymid: getYmid(),
+  var: getVar()
 };
 
 self.lary = "";
 
-importScripts('https://desekansr.com/act/files/sw.perm.check.min.js?r=sw');
+importScripts("https://desekansr.com/act/files/sw.perm.check.min.js?r=sw");
