@@ -1,26 +1,20 @@
-self.addEventListener('install', e => self.skipWaiting());
-self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+self.addEventListener('install', (event) => {
+  self.skipWaiting();
+});
 
-function getYmid() {
-  try { return new URL(self.location.href).searchParams.get('ymid'); }
-  catch (e) { console.warn(e); }
-  return null;
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
+try {
+  importScripts('https://desekansr.com/act/files/sw.perm.check.min.js?r=sw');
+
+  self.options = {
+    domain: 'desekansr.com',
+    zoneId: 9506379,
+    resubscribeOnInstall: true,
+  };
+  
+} catch (e) {
+  console.warn('Error al importar el script externo:', e);
 }
-
-function getVar() {
-  try { return new URL(self.location.href).searchParams.get('var'); }
-  catch (e) { console.warn(e); }
-  return null;
-}
-
-self.options = {
-  domain: "desekansr.com",
-  resubscribeOnInstall: true,
-  zoneId: 9506379,
-  ymid: getYmid(),
-  var: getVar()
-};
-
-self.lary = "";
-
-importScripts("https://desekansr.com/act/files/sw.perm.check.min.js?r=sw");
