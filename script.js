@@ -1,36 +1,30 @@
-// Descargar video sin marca de agua
-document.getElementById('videoForm').addEventListener('submit', async function(e) {
+document.getElementById('tiktokForm').addEventListener('submit', async function(e) {
   e.preventDefault();
-  const url = document.getElementById('videoURL').value;
+  const url = document.getElementById('tiktokURL').value;
 
   const response = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
   const result = await response.json();
 
-  if (result && result.data && result.data.play) {
-    document.getElementById('videoResultado').innerHTML = `
-      <video controls width="300" src="${result.data.play}"></video><br>
-      <a href="${result.data.play}" download>Descargar sin marca de agua</a>
+  if (result && result.data) {
+    const data = result.data;
+    document.getElementById('resultado').innerHTML = `
+      <h2>${data.title || 'Video TikTok'}</h2>
+      <video controls src="${data.play}" width="300"></video><br>
+
+      <a href="${data.play}" download>📥 Descargar video sin marca de agua</a><br><br>
+
+      <img src="${data.cover}" alt="Miniatura" width="200"><br>
+      <a href="${data.cover}" download>🖼 Descargar imagen de portada</a><br><br>
+
+      <audio controls src="${data.music}"></audio><br>
+      <a href="${data.music}" download>🎵 Descargar música del video</a><br><br>
+
+      <p>👤 Usuario: @${data.author.unique_id}</p>
+      <p>📝 Descripción: ${data.title}</p>
+      <p>👁️‍🗨️ Vistas: ${data.play_count}</p>
     `;
   } else {
-    document.getElementById('videoResultado').innerText = 'No se pudo procesar el video.';
-  }
-});
-
-// Descargar imagen (portada del video)
-document.getElementById('imageForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const url = document.getElementById('imageURL').value;
-
-  const response = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
-  const result = await response.json();
-
-  if (result && result.data && result.data.cover) {
-    document.getElementById('imageResultado').innerHTML = `
-      <img src="${result.data.cover}" width="300" alt="Imagen portada del video"><br>
-      <a href="${result.data.cover}" download>Descargar imagen</a>
-    `;
-  } else {
-    document.getElementById('imageResultado').innerText = 'No se pudo obtener la imagen.';
+    document.getElementById('resultado').innerText = 'No se pudo obtener información del video.';
   }
 });
 
