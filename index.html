@@ -2,23 +2,36 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>TikTok Downloader</title>
+  <title>Descargar TikTok sin Marca de Agua</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Descarga videos, imágenes y música de TikTok sin marca de agua en segundos. Gratis, rápido y sin instalar apps.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>🎬 TikTok Downloader</h1>
+  <header>
+    <h1>🎬 TikTok Downloader</h1>
+    <button id="themeToggle">🌓 Cambiar tema</button>
+  </header>
 
-  <form id="tiktokForm">
-    <input type="text" id="tiktokURL" placeholder="Pega el enlace del video de TikTok" required>
-    <button type="submit">Buscar contenido</button>
-  </form>
+  <main>
+    <form id="tiktokForm">
+      <textarea id="tiktokURL" placeholder="Pega uno o varios links de TikTok, uno por línea" required></textarea>
+      <button type="submit">Buscar contenido</button>
+    </form>
 
-  <div id="resultado"></div>
+    <section id="resultado"></section>
+    <div class="ad ad-top">[Publicidad superior]</div>
+    <section id="historial">
+      <h3>📂 Historial reciente</h3>
+      <ul id="listaHistorial"></ul>
+    </section>
+    <div class="ad ad-bottom">[Publicidad inferior]</div>
+  </main>
 
-  <div class="ad">[Aquí puedes poner tu anuncio]</div>
+  <footer>
+    <p>&copy; 2025 TikTok Downloader | <a href="#">Política de privacidad</a></p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
 </html>
-
